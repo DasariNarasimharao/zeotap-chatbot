@@ -1,0 +1,39 @@
+.stApp {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.chat-message {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-message {
+    background-color: #F0F2F6;
+    align-self: flex-end;
+}
+
+.bot-message {
+    background-color: #FF4B4B15;
+    align-self: flex-start;
+}
+
+.confidence-indicator {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    color: #666;
+}
+
+.example-questions {
+    padding: 1rem;
+    background-color: #F8F9FA;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.platform-selector {
+    margin: 1rem 0;
+}
