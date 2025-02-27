@@ -32,8 +32,10 @@ class ProjectDocumentationPDF(FPDF):
 
     def bullet_point(self, text):
         self.set_font("helvetica", "", 12)
-        self.cell(10, 10, "-", new_x="RIGHT")
-        self.multi_cell(0, 10, text)
+        bullet_width = 10
+        available_width = self.epw - bullet_width  # Calculate available width
+        self.cell(bullet_width, 10, "-", new_x="RIGHT")
+        self.multi_cell(available_width, 10, text)
 
 def generate_documentation():
     pdf = ProjectDocumentationPDF()
