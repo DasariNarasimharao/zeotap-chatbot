@@ -56,7 +56,8 @@ def generate_documentation():
         "3. Technical Architecture",
         "4. Implementation Details",
         "5. User Interface",
-        "6. Future Enhancements"
+        "6. Advanced Features",
+        "7. Future Enhancements"
     ]
     for section in sections:
         pdf.cell(0, 10, section, new_x="LMARGIN", new_y="NEXT")
@@ -66,6 +67,12 @@ def generate_documentation():
     pdf.chapter_title("1. Project Overview")
     pdf.chapter_body("""
 The CDP Support Chatbot is a sophisticated Streamlit-based application designed to provide comprehensive and nuanced answers to complex how-to questions about Customer Data Platforms (CDPs). The system leverages advanced similarity matching and multi-CDP documentation integration to deliver accurate and relevant responses.
+
+Key Supported Platforms:
+- Segment
+- mParticle
+- Lytics
+- Zeotap
     """)
 
     # Core Features
@@ -73,11 +80,11 @@ The CDP Support Chatbot is a sophisticated Streamlit-based application designed 
     pdf.chapter_title("2. Core Features")
 
     features = [
-        "Advanced Question Handling",
-        "Multi-Platform Support (Segment, mParticle, Lytics, Zeotap)",
-        "Enhanced Similarity Matching",
-        "Complex Query Processing",
-        "Interactive User Interface"
+        "Advanced Question Processing with multi-part query support",
+        "Multi-Platform CDP Support with detailed documentation integration",
+        "Enhanced Similarity Matching using TF-IDF and BM25",
+        "Platform Comparison Analysis with key difference detection",
+        "Interactive User Interface with confidence indicators"
     ]
 
     for feature in features:
@@ -89,10 +96,10 @@ The CDP Support Chatbot is a sophisticated Streamlit-based application designed 
 
     pdf.section_title("Core Components")
     components = {
-        "Question Handler": "Processes and analyzes user queries for intent and complexity",
-        "Document Processor": "Manages document retrieval and similarity matching",
-        "Response Generator": "Creates structured and contextual responses",
-        "UI Layer": "Streamlit-based interactive interface"
+        "Question Handler": "Advanced query analysis and preprocessing",
+        "Document Processor": "Enhanced similarity matching and response generation",
+        "Comparison Engine": "Cross-platform feature comparison and analysis",
+        "UI Layer": "Streamlit-based interactive interface with real-time feedback"
     }
 
     for component, description in components.items():
@@ -117,11 +124,11 @@ The CDP Support Chatbot is a sophisticated Streamlit-based application designed 
 - BM25 ranking
 - Hybrid scoring system
 - Context-aware response selection"""),
-        ("Response Generation", """
-- Structured response formatting
-- Confidence scoring
-- Platform-specific adaptations
-- Step-by-step answer generation""")
+        ("Platform Comparison", """
+- Cross-platform feature analysis
+- Key difference extraction
+- Term-based comparison
+- Structured comparison output""")
     ]
 
     for title, details in implementations:
@@ -145,16 +152,31 @@ The CDP Support Chatbot is a sophisticated Streamlit-based application designed 
     for feature in ui_features:
         pdf.bullet_point(feature)
 
+    # Advanced Features
+    pdf.add_page()
+    pdf.chapter_title("6. Advanced Features")
+
+    advanced_features = [
+        "Cross-Platform Comparison Engine",
+        "Enhanced Similarity Matching with BM25",
+        "Multi-part Question Processing",
+        "Context-Aware Response Generation",
+        "Confidence Scoring System"
+    ]
+
+    for feature in advanced_features:
+        pdf.bullet_point(feature)
+
     # Future Enhancements
     pdf.add_page()
-    pdf.chapter_title("6. Future Enhancements")
+    pdf.chapter_title("7. Future Enhancements")
 
     future_features = [
-        "Cross-CDP comparison functionality",
-        "Enhanced UI with visual guides and examples",
-        "Advanced analytics dashboard",
+        "Advanced visual comparison guides",
+        "Enhanced analytics dashboard",
         "Custom training data integration",
-        "API endpoint integration"
+        "API endpoint integration",
+        "Real-time documentation updates"
     ]
 
     for feature in future_features:
