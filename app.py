@@ -52,22 +52,22 @@ if st.button("Send"):
     if user_question:
         # Validate question
         is_valid, error_message = st.session_state.question_handler.validate_question(user_question)
-        
+
         if not is_valid:
             st.error(error_message)
         else:
             # Process question
             platform = None if selected_platform == "All Platforms" else selected_platform.lower()
-            
+
             # Get response
             doc, similarity = st.session_state.doc_processor.find_relevant_document(
                 user_question,
                 platform
             )
-            
+
             # Format response
             response = format_response(doc, similarity, platform)
-            
+
             # Add to chat history
             st.session_state.chat_history.append({
                 "question": user_question,
@@ -83,16 +83,16 @@ for chat in st.session_state.chat_history:
         </div>""",
         unsafe_allow_html=True
     )
-    
+
     # Bot response
     confidence_color = {
         "high": "green",
         "medium": "orange",
         "low": "red"
     }[chat['response']['confidence']]
-    
+
     platform_info = f"Platform: {chat['response']['platform'].title()}" if chat['response']['platform'] else ""
-    
+
     st.markdown(
         f"""<div class="chat-message bot-message">
             <div class="message-content">{chat['response']['response']}</div>
@@ -106,4 +106,4 @@ for chat in st.session_state.chat_history:
 # Clear chat button
 if st.button("Clear Chat"):
     st.session_state.chat_history = []
-    st.experimental_rerun()
+    st.rerun()
