@@ -14,17 +14,33 @@
 .user-message {
     background-color: #F0F2F6;
     align-self: flex-end;
+    margin-left: 20%;
 }
 
 .bot-message {
     background-color: #FF4B4B15;
     align-self: flex-start;
+    margin-right: 20%;
+}
+
+.message-content {
+    font-size: 1rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
 }
 
 .confidence-indicator {
     font-size: 0.8rem;
     margin-top: 0.5rem;
     color: #666;
+}
+
+.question-analysis {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background-color: #F8F9FA;
+    border-radius: 0.3rem;
+    font-size: 0.8rem;
 }
 
 .example-questions {
@@ -36,4 +52,54 @@
 
 .platform-selector {
     margin: 1rem 0;
+}
+
+/* Enhanced styling for complex responses */
+.bot-message pre {
+    background-color: #F8F9FA;
+    padding: 1rem;
+    border-radius: 0.3rem;
+    overflow-x: auto;
+}
+
+.bot-message ul, .bot-message ol {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Style for comparison responses */
+.comparison-section {
+    border-left: 3px solid #FF4B4B;
+    padding-left: 1rem;
+    margin: 0.5rem 0;
+}
+
+/* Improved visibility for step-by-step responses */
+.step-by-step {
+    counter-reset: step;
+}
+
+.step-by-step li {
+    list-style: none;
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.step-by-step li:before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: #FF4B4B;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
 }
