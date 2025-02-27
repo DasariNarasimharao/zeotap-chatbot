@@ -213,26 +213,16 @@ class DocumentProcessor:
             complexity = question_analysis['complexity']
             question_types = question_analysis['question_types']
 
-            # Handle comparison questions
+            # Enhanced comparison handling
             if 'comparison' in question_types and len(platforms) > 1:
-                responses = []
-                max_similarity = 0.0
-
-                for platform in platforms:
-                    docs = self.find_relevant_documents(query, platform, top_k=2)
-                    if docs[0][1] > 0.3:
-                        responses.append(f"{platform.title()}: {docs[0][0]}")
-                        max_similarity = max(max_similarity, docs[0][1])
-
-                if responses:
-                    return "Comparison:\n" + "\n\n".join(responses), max_similarity
+                return self.compare_platforms(query, platforms)
 
             # Handle complex questions
             if complexity == 'complex':
                 all_responses = []
                 max_similarity = 0.0
 
-                # Process each component of the complex question
+            # Process each component of the complex question
                 for component in question_analysis['components']:
                     docs = self.find_relevant_documents(component, platforms[0] if platforms else None)
                     if docs[0][1] > 0.3:
@@ -266,3 +256,85 @@ class DocumentProcessor:
         except Exception as e:
             print(f"Error updating BM25 index: {e}")
             self.bm25 = None
+
+    def compare_platforms(self, query: str, platforms: List[str]) -> Tuple[str, float]:
+        """Compare specific aspects across different CDP platforms"""
+        try:
+            # Process comparison query
+            processed_query = self.preprocess_text(query)
+
+            # Initialize results dictionary
+            comparison_results = {platform: [] for platform in platforms}
+            max_similarity = 0.0
+
+            # Get relevant documents for each platform
+            for platform in platforms:
+                docs = self.find_relevant_documents(query, platform, top_k=2)
+                if docs[0][1] > 0.3:  # If similarity is above threshold
+                    comparison_results[platform] = docs
+                    max_similarity = max(max_similarity, docs[0][1])
+
+            # Format comparison response
+            if not any(comparison_results.values()):
+                return "I couldn't find enough information to make a meaningful comparison.", 0.0
+
+            # Generate structured comparison
+            comparison_text = "Platform Comparison Analysis:\n\n"
+
+            # Add platform-specific information
+            for platform, results in comparison_results.items():
+                if results:
+                    comparison_text += f"{platform.title()}:\n"
+                    comparison_text += f"Primary Match: {results[0][0]}\n"
+                    if len(results) > 1 and results[1][1] > 0.3:
+                        comparison_text += f"Additional Information: {results[1][0]}\n"
+                    comparison_text += "\n"
+
+            # Add comparison summary
+            comparison_text += "\nKey Differences:\n"
+            differences = self._extract_key_differences(comparison_results)
+            comparison_text += differences
+
+            return comparison_text, max_similarity
+
+        except Exception as e:
+            print(f"Error in compare_platforms: {e}")
+            return f"An error occurred while comparing platforms: {str(e)}", 0.0
+
+    def _extract_key_differences(self, comparison_results: Dict[str, List[Tuple[str, float]]]) -> str:
+        """Extract and summarize key differences between platforms"""
+        try:
+            differences = []
+            platforms = list(comparison_results.keys())
+
+            # Compare each platform pair
+            for i in range(len(platforms)):
+                for j in range(i + 1, len(platforms)):
+                    platform1, platform2 = platforms[i], platforms[j]
+
+                    if comparison_results[platform1] and comparison_results[platform2]:
+                        # Get main content for each platform
+                        content1 = comparison_results[platform1][0][0]
+                        content2 = comparison_results[platform2][0][0]
+
+                        # Extract key terms and their context
+                        terms1 = set(self.preprocess_text(content1).split())
+                        terms2 = set(self.preprocess_text(content2).split())
+
+                        # Find unique terms for each platform
+                        unique_to_1 = terms1 - terms2
+                        unique_to_2 = terms2 - terms1
+
+                        if unique_to_1 or unique_to_2:
+                            diff = f"\n{platform1.title()} vs {platform2.title()}:\n"
+                            if unique_to_1:
+                                diff += f"- {platform1.title()} uniquely mentions: {', '.join(sorted(unique_to_1)[:5])}\n"
+                            if unique_to_2:
+                                diff += f"- {platform2.title()} uniquely mentions: {', '.join(sorted(unique_to_2)[:5])}\n"
+                            differences.append(diff)
+
+            return "\n".join(differences) if differences else "No significant differences found in the available documentation."
+
+        except Exception as e:
+            print(f"Error in _extract_key_differences: {e}")
+            return "Could not extract key differences due to an error."
